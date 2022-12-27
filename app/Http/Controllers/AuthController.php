@@ -47,6 +47,7 @@ class AuthController extends Controller
 
         if ($data) { //apakah email tersebut ada atau tidak
             if ($password == $data->pengguna_password) {
+                Session::put('pengguna_id', $data->pengguna_id);
                 Session::put('pengguna_nama', $data->pengguna_nama);
                 Session::put('pengguna_email', $data->pengguna_email);
                 Session::put('pengguna_nik', $data->pengguna_nik);

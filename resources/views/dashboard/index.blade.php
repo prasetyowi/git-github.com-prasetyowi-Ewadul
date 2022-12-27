@@ -1,5 +1,5 @@
 <!-- Menghubungkan dengan view template master -->
-@extends('../layout/layout_admin')
+@extends('../layout/layout')
 
 <!-- isi bagian judul halaman -->
 <!-- cara penulisan isi section yang pendek -->
@@ -37,7 +37,7 @@
                         <div class="info-box-content">
                             <span class="info-box-text">Jenis Pengaduan</span>
                             <span class="info-box-number">
-                                10
+                                {{ $data['jenis_pengaduan'] }}
                             </span>
                         </div>
                         <!-- /.info-box-content -->
@@ -51,7 +51,7 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">Pengaduan</span>
-                            <span class="info-box-number">41,410</span>
+                            <span class="info-box-number">{{ $data['pengaduan'] }}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
@@ -81,67 +81,11 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">Pengguna</span>
-                            <span class="info-box-number">2,000</span>
+                            <span class="info-box-number">{{ $data['pengguna'] }}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
                     <!-- /.info-box -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Rekap Laporan Bulanan</h5>
-                        </div>
-                        <!-- /.card-header -->
-                        <!-- ./card-body -->
-                        <div class="card-footer">
-                            <div class="row">
-                                <div class="col-sm-3 col-6">
-                                    <div class="description-block border-right">
-                                        <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 17%</span>
-                                        <h5 class="description-header">1200</h5>
-                                        <span class="description-text text-info font-weight-bold">BARU</span>
-                                    </div>
-                                    <!-- /.description-block -->
-                                </div>
-                                <!-- /.col -->
-                                <div class="col-sm-3 col-6">
-                                    <div class="description-block border-right">
-                                        <span class="description-percentage text-warning"><i class="fas fa-caret-left"></i> 0%</span>
-                                        <h5 class="description-header">1200</h5>
-                                        <span class="description-text text-warning font-weight-bold">PENDING</span>
-                                    </div>
-                                    <!-- /.description-block -->
-                                </div>
-                                <!-- /.col -->
-                                <div class="col-sm-3 col-6">
-                                    <div class="description-block border-right">
-                                        <span class="description-percentage text-success"><i class="fas fa-caret-up"></i> 20%</span>
-                                        <h5 class="description-header">1200</h5>
-                                        <span class="description-text text-success font-weight-bold">SELESAI</span>
-                                    </div>
-                                    <!-- /.description-block -->
-                                </div>
-                                <!-- /.col -->
-                                <div class="col-sm-3 col-6">
-                                    <div class="description-block">
-                                        <span class="description-percentage text-danger"><i class="fas fa-caret-down"></i> 18%</span>
-                                        <h5 class="description-header">1200</h5>
-                                        <span class="description-text text-danger font-weight-bold">BATAL</span>
-                                    </div>
-                                    <!-- /.description-block -->
-                                </div>
-                            </div>
-                            <!-- /.row -->
-                        </div>
-                        <!-- /.card-footer -->
-                    </div>
-                    <!-- /.card -->
                 </div>
                 <!-- /.col -->
             </div>
@@ -179,46 +123,28 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach($data['pengaduan_terbaru'] as $value)
                                         <tr>
-                                            <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                            <td>Jalan Raya</td>
+                                            <td><a href="pages/examples/invoice.html">{{ $value->tr_ewadul_id }}</a></td>
+                                            <td>{{ $value->jenis_pengaduan_desc }}</td>
                                             <td>
-                                                <div class="sparkbar" data-color="#00a65a" data-height="20">12-12-2022</div>
+                                                <div class="sparkbar" data-color="#00a65a" data-height="20">{{ $value->tr_ewadul_tgl }}</div>
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-success">Selesai</button>
+                                                <button class="btn btn-sm <?php
+                                                                            if ($value->tr_ewadul_status == 'BARU') {
+                                                                                echo 'btn-primary';
+                                                                            } else if ($value->tr_ewadul_status == 'BATAL') {
+                                                                                echo 'btn-danger';
+                                                                            } else if ($value->tr_ewadul_status == 'PENDING') {
+                                                                                echo 'btn-warning';
+                                                                            } else if ($value->tr_ewadul_status == 'SELESAI') {
+                                                                                echo 'btn-success';
+                                                                            }
+                                                                            ?>">{{ $value->tr_ewadul_status }}</button>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                                            <td>Rambu Lalu lintas</td>
-                                            <td>
-                                                <div class="sparkbar" data-color="#f39c12" data-height="20">12-12-2022</div>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-warning">Pending</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                            <td>Kebersihan</td>
-                                            <td>
-                                                <div class="sparkbar" data-color="#f56954" data-height="20">12-12-2022</div>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-danger">Batal</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                            <td>Tata Kota</td>
-                                            <td>
-                                                <div class="sparkbar" data-color="#00c0ef" data-height="20">12-12-2022</div>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-info">Baru</button>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -240,7 +166,7 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">Baru</span>
-                            <span class="info-box-number">163,921</span>
+                            <span class="info-box-number">{{ $data['baru'] }}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
@@ -251,7 +177,7 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">Pending</span>
-                            <span class="info-box-number">5,200</span>
+                            <span class="info-box-number">{{ $data['pending'] }}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
@@ -261,7 +187,7 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">Selesai</span>
-                            <span class="info-box-number">92,050</span>
+                            <span class="info-box-number">{{ $data['selesai'] }}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
@@ -271,7 +197,7 @@
 
                         <div class="info-box-content">
                             <span class="info-box-text">Batal</span>
-                            <span class="info-box-number">114,381</span>
+                            <span class="info-box-number">{{ $data['batal'] }}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
