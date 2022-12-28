@@ -156,7 +156,7 @@
                                 <button class="btn btn-sm ${v.tr_ewadul_status == 'BARU' ? 'btn-primary' : v.tr_ewadul_status == 'BATAL' ? 'btn-danger': v.tr_ewadul_status == 'PENDING' ? 'btn-warning': v.tr_ewadul_status == 'SELESAI' ? 'btn-success' : '' }">${v.tr_ewadul_status}</button>
                             </td>
                             <td style="vertical-align:middle; text-align:center;">
-                                <button class="btn btn-sm btn-info"><i class="fa fa-pen"></i></button>
+                                <a href="/pengaduan/edit/?id=${v.tr_ewadul_id}" class="btn btn-sm btn-info" target="_blank"><i class="fa fa-pen"></i></a>
                             </td>
                         </tr>
                     `)

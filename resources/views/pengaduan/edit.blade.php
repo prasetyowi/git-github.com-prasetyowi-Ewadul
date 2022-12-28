@@ -50,12 +50,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>No Pengaduan</label>
-                                    <input readonly="readonly" type="text" class="form-control" id="TrEwadul-tr_ewadul_id" name="TrEwadul[tr_ewadul_id]" style="width: 100%;" value="{{ $data['tr_ewadul_id'] }}">
+                                    <input readonly="readonly" type="text" class="form-control" id="TrEwadul-tr_ewadul_id" name="TrEwadul[tr_ewadul_id]" style="width: 100%;" value="{{ $data['header']->tr_ewadul_id }}">
                                     <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_id"></div>
                                 </div>
                                 <div class="form-group">
                                     <label>Tanggal</label>
-                                    <input type="date" class="form-control" id="TrEwadul-tr_ewadul_tgl" name="TrEwadul[tr_ewadul_tgl]" style="width: 100%;" value="<?= date('Y-m-d') ?>">
+                                    <input readonly="readonly" type="date" class="form-control" id="TrEwadul-tr_ewadul_tgl" name="TrEwadul[tr_ewadul_tgl]" style="width: 100%;" value="<?= date('Y-m-d', strtotime($data['header']->tr_ewadul_tgl)) ?>">
                                     <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_tgl"></div>
                                 </div>
                             </div>
@@ -66,14 +66,14 @@
                                     <select class="form-control select2" id="TrEwadul-jenis_pengaduan_id" name="TrEwadul[jenis_pengaduan_id]" style="width: 100%;">
                                         <option value="">** Pilih **</option>
                                         @foreach($data['jenis'] as $value)
-                                        <option value="{{ $value->jenis_pengaduan_id }}">{{ $value->jenis_pengaduan_desc }}</option>
+                                        <option value="{{ $value->jenis_pengaduan_id }}" <?= $data['header']->jenis_pengaduan_id == $value->jenis_pengaduan_id ? 'selected' : '' ?>>{{ $value->jenis_pengaduan_desc }}</option>
                                         @endforeach
                                     </select>
                                     <div class="text-danger d-none" role="alert" id="alert-jenis_pengaduan_id"></div>
                                 </div>
                                 <div class="form-group">
                                     <label>Status</label>
-                                    <input readonly="readonly" type="text" class="form-control" id="TrEwadul-tr_ewadul_status" name="TrEwadul[tr_ewadul_status]" style="width: 100%;" value="BARU">
+                                    <input readonly="readonly" type="text" class="form-control" id="TrEwadul-tr_ewadul_status" name="TrEwadul[tr_ewadul_status]" style="width: 100%;" value="{{ $data['header']->tr_ewadul_status }}">
                                 </div>
                                 <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_status"></div>
                             </div>
@@ -81,7 +81,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Deskripsi</label>
-                                    <textarea class="form-control" id="TrEwadul-tr_ewadul_desc" name="TrEwadul[tr_ewadul_desc]" style="height:130px;"></textarea>
+                                    <textarea class="form-control" id="TrEwadul-tr_ewadul_desc" name="TrEwadul[tr_ewadul_desc]" style="height:130px;">{{ $data['header']->tr_ewadul_desc }}</textarea>
                                     <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_desc"></div>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Alamat</label>
-                                    <input type="text" class="form-control" id="TrEwadul-tr_ewadul_alamat" name="TrEwadul[tr_ewadul_alamat]" style="width: 100%;" value="">
+                                    <input type="text" class="form-control" id="TrEwadul-tr_ewadul_alamat" name="TrEwadul[tr_ewadul_alamat]" style="width: 100%;" value="{{ $data['header']->tr_ewadul_alamat }}">
                                     <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_alamat"></div>
                                 </div>
                             </div>
@@ -188,8 +188,10 @@
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="TrEwadul-tr_ewadul_attechment" name="TrEwadul[tr_ewadul_attechment]">
                                     <label class="custom-file-label" for="customFile">Choose file</label>
+                                    <input type="hidden" id="TrEwadul-tr_ewadul_attechment_edit" name="TrEwadul[tr_ewadul_attechment_edit]" value="{{$data['header']->tr_ewadul_attechment}}">
                                     <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_attechment"></div>
-                                </div>
+                                </div><br><br>
+                                <img src="{{ asset('assets/upload/images/pengaduan/'.$data['header']->tr_ewadul_attechment) }}" style="width:350px;">
                                 <!-- <div id="TrEwadul-tr_ewadul_attechment" name="TrEwadul[tr_ewadul_attechment]" class=" row">
                                     <div class="col-lg-6">
                                         <div class="btn-group w-100">
@@ -287,7 +289,7 @@
             $("#btn_save_pengaduan").prop("disabled", true);
 
             $.ajax({
-                url: "/pengaduan/store",
+                url: "/pengaduan/update",
                 method: "POST",
                 data: new FormData(this),
                 dataType: 'JSON',
@@ -306,11 +308,6 @@
                             showConfirmButton: false,
                             timer: 3000
                         });
-
-                        setTimeout(function() {
-                            location.reload();
-                        }, 500);
-
                     } else {
                         Swal.fire({
                             type: 'error',

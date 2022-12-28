@@ -125,7 +125,7 @@
                                     <tbody>
                                         @foreach($data['pengaduan_terbaru'] as $value)
                                         <tr>
-                                            <td><a href="pages/examples/invoice.html">{{ $value->tr_ewadul_id }}</a></td>
+                                            <td><a href="/pengaduan/detail/?id={{ $value->tr_ewadul_id }}">{{ $value->tr_ewadul_id }}</a></td>
                                             <td>{{ $value->jenis_pengaduan_desc }}</td>
                                             <td>
                                                 <div class="sparkbar" data-color="#00a65a" data-height="20">{{ $value->tr_ewadul_tgl }}</div>
@@ -152,7 +152,7 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer clearfix">
-                            <a href="javascript:void(0)" class="btn btn-sm btn-primary float-left"><i class="fa fa-search"></i> Lihat Pengaduan</a>
+                            <a href="/pengaduan" class="btn btn-sm btn-primary float-left"><i class="fa fa-search"></i> Lihat Pengaduan</a>
                         </div>
                         <!-- /.card-footer -->
                     </div>

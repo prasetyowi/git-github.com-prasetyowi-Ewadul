@@ -30,7 +30,10 @@ Route::get('/auth/logout', [AuthController::class, 'logout']);
 
 Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::get('/pengaduan', [PengaduanController::class, 'index']);
+Route::get('/pengaduan/edit', [PengaduanController::class, 'edit']);
+Route::get('/pengaduan/detail', [PengaduanController::class, 'detail']);
 Route::get('/pengaduan/get_pengaduan_by_filter', [PengaduanController::class, 'get_pengaduan_by_filter']);
 Route::get('/pengaduan/get_pengaduan_today', [PengaduanController::class, 'get_pengaduan_today']);
 Route::get('/pengaduan/form', [PengaduanController::class, 'form']);
 Route::post('/pengaduan/store', [PengaduanController::class, 'store']);
+Route::post('/pengaduan/update', [PengaduanController::class, 'update']);
