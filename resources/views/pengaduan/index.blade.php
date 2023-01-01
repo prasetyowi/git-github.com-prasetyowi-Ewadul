@@ -74,9 +74,11 @@
                                 <button type="button" class="btn btn-info" id="btn_search_pengaduan">
                                     <i class="fas fa-search"></i> Cari
                                 </button>
+                                @if(Session::get('pengguna_level_id') == 3)
                                 <a href="/pengaduan/form" target="_blank" class="btn btn-info">
                                     <i class="fas fa-plus"></i> Form Pengaduan
                                 </a>
+                                @endif
                             </div>
                         </div>
                         <!-- /.col -->

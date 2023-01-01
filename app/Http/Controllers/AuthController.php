@@ -51,6 +51,7 @@ class AuthController extends Controller
                 Session::put('pengguna_nama', $data->pengguna_nama);
                 Session::put('pengguna_email', $data->pengguna_email);
                 Session::put('pengguna_nik', $data->pengguna_nik);
+                Session::put('pengguna_level_id', $data->pengguna_level_id);
                 Session::put('login', TRUE);
 
                 // return session()->all();
@@ -126,7 +127,8 @@ class AuthController extends Controller
             'pengguna_nama' => $request->pengguna_nama,
             'pengguna_nik' => $request->pengguna_nik,
             'pengguna_email' => $request->pengguna_email,
-            'pengguna_password' => md5($request->pengguna_password)
+            'pengguna_password' => md5($request->pengguna_password),
+            'pengguna_level_id' => 3
         ]);
 
         return response()->json([

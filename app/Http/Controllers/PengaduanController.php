@@ -12,7 +12,11 @@ class PengaduanController extends Controller
 {
     public function index()
     {
-        return view('pengaduan/index');
+        if (Session::get('login') == TRUE) {
+            return view('pengaduan/index');
+        } else {
+            return redirect()->to('/auth/login');
+        }
     }
 
     public function form()
@@ -34,18 +38,30 @@ class PengaduanController extends Controller
         }
 
         $data['jenis'] = DB::table('jenis_pengaduan')->where('is_aktif', 1)->get();
+        $data['status'] = DB::table('tr_ewadul_status')->get();
         $data['kota'] = "Surabaya";
         $data['tr_ewadul_id'] = $tr_ewadul_id;
 
-        return view('pengaduan/form', compact('data'));
+        if (Session::get('login') == TRUE) {
+            return view('pengaduan/form', compact('data'));
+        } else {
+            return redirect()->to('/auth/login');
+        }
     }
 
     public function edit(Request $request)
     {
         $data['header'] = DB::table('tr_ewadul')->where('tr_ewadul_id', $request->id)->get()[0];
         $data['jenis'] = DB::table('jenis_pengaduan')->where('is_aktif', 1)->get();
+        $data['status'] = DB::table('tr_ewadul_status')->get();
 
-        return view('pengaduan/edit', compact('data'));
+        if (Session::get('pengguna_level_id') == "1") {
+            return view('pengaduan/karyawan/edit', compact('data'));
+        } else if (Session::get('pengguna_level_id') == "2") {
+            return view('pengaduan/karyawan/edit', compact('data'));
+        } else if (Session::get('pengguna_level_id') == "3") {
+            return view('pengaduan/edit', compact('data'));
+        }
     }
 
     public function detail(Request $request)
@@ -85,8 +101,26 @@ class PengaduanController extends Controller
 
     public function get_pengaduan_today()
     {
-        //get all posts from Models
-        $data = DB::select("SELECT
+        if (Session::get('pengguna_level_id') == "3") {
+
+            //get all posts from Models
+            $data = DB::select("SELECT
+                            pengaduan.tr_ewadul_id,
+                            pengaduan.jenis_pengaduan_id,
+                            pengaduan.jenis_pengaduan_id,
+                            jenis.jenis_pengaduan_desc,
+                            DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%d-%m-%Y') AS tr_ewadul_tgl,
+                            pengaduan.tr_ewadul_status
+                            FROM tr_ewadul pengaduan
+                            LEFT JOIN jenis_pengaduan jenis
+                            ON jenis.jenis_pengaduan_id = pengaduan.jenis_pengaduan_id
+                            WHERE DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%Y-%m-%d') = '" . date('Y-m-d') . "'
+                            AND pengaduan.pengguna_id = '" . Session::get('pengguna_id') . "'
+                            ORDER BY DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%d-%m-%Y'),pengaduan.tr_ewadul_id ASC");
+        } else {
+
+            //get all posts from Models
+            $data = DB::select("SELECT
                             pengaduan.tr_ewadul_id,
                             pengaduan.jenis_pengaduan_id,
                             pengaduan.jenis_pengaduan_id,
@@ -98,7 +132,7 @@ class PengaduanController extends Controller
                             ON jenis.jenis_pengaduan_id = pengaduan.jenis_pengaduan_id
                             WHERE DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%Y-%m-%d') = '" . date('Y-m-d') . "'
                             ORDER BY DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%d-%m-%Y'),pengaduan.tr_ewadul_id ASC");
-
+        }
 
         //return view with data
         return $data;
@@ -117,8 +151,27 @@ class PengaduanController extends Controller
             $status = " AND pengaduan.tr_ewadul_status IN (" . implode(",", $status) . ")";
         }
 
-        //get all posts from Models
-        $data = DB::select("SELECT
+        if (Session::get('pengguna_level_id') == "3") {
+
+            //get all posts from Models
+            $data = DB::select("SELECT
+                            pengaduan.tr_ewadul_id,
+                            pengaduan.jenis_pengaduan_id,
+                            pengaduan.jenis_pengaduan_id,
+                            jenis.jenis_pengaduan_desc,
+                            DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%d-%m-%Y') AS tr_ewadul_tgl,
+                            pengaduan.tr_ewadul_status
+                            FROM tr_ewadul pengaduan
+                            LEFT JOIN jenis_pengaduan jenis
+                            ON jenis.jenis_pengaduan_id = pengaduan.jenis_pengaduan_id
+                            WHERE DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%Y-%m-%d') BETWEEN'" . $tgl1 . "' AND'" . $tgl2 . "'
+                            AND pengaduan.pengguna_id = '" . Session::get('pengguna_id') . "'
+                            " . $status . "
+                            ORDER BY DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%d-%m-%Y') DESC, pengaduan.tr_ewadul_id DESC");
+        } else {
+
+            //get all posts from Models
+            $data = DB::select("SELECT
                             pengaduan.tr_ewadul_id,
                             pengaduan.jenis_pengaduan_id,
                             pengaduan.jenis_pengaduan_id,
@@ -131,7 +184,7 @@ class PengaduanController extends Controller
                             WHERE DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%Y-%m-%d') BETWEEN'" . $tgl1 . "' AND'" . $tgl2 . "'
                             " . $status . "
                             ORDER BY DATE_FORMAT(pengaduan.tr_ewadul_tgl,'%d-%m-%Y') DESC, pengaduan.tr_ewadul_id DESC");
-
+        }
 
         //return view with data
         return $data;
@@ -285,6 +338,20 @@ class PengaduanController extends Controller
                 'tr_ewadul_status' => $request->TrEwadul['tr_ewadul_status'],
                 'tr_ewadul_attechment' => $new_name,
                 'tgl_updated' => date('Y-m-d H:i:s'),
+                'pengguna_id' => Session::get('pengguna_id')
+            ]);
+        }
+
+        if ($request->TrEwadul['tr_ewadul_status'] == "DALAM PROSES" || $request->TrEwadul['tr_ewadul_status'] == "BUTUH PERSETUJUAN") {
+            $post = DB::table('tr_ewadul_proses')->insert([
+                'tr_ewadul_id' => $request->TrEwadul['tr_ewadul_id'],
+                'tgl_proses_pengaduan' => date('Y-m-d H:i:s'),
+                'pengguna_id' => Session::get('pengguna_id')
+            ]);
+        } else if ($request->TrEwadul['tr_ewadul_status'] == "SELESAI" || $request->TrEwadul['tr_ewadul_status'] == "BATAL") {
+            $post = DB::table('tr_ewadul_approval')->insert([
+                'tr_ewadul_id' => $request->TrEwadul['tr_ewadul_id'],
+                'tgl_approval_pengaduan' => date('Y-m-d H:i:s'),
                 'pengguna_id' => Session::get('pengguna_id')
             ]);
         }

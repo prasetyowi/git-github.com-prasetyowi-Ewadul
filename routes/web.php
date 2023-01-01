@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengaduanController;
+use App\Http\Controllers\JenisPengaduanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,11 @@ Route::get('/pengaduan/get_pengaduan_today', [PengaduanController::class, 'get_p
 Route::get('/pengaduan/form', [PengaduanController::class, 'form']);
 Route::post('/pengaduan/store', [PengaduanController::class, 'store']);
 Route::post('/pengaduan/update', [PengaduanController::class, 'update']);
+
+Route::get('/jenispengaduan', [JenisPengaduanController::class, 'index']);
+Route::get('/jenispengaduan/get_jenis_pengaduan', [JenisPengaduanController::class, 'get_jenis_pengaduan']);
+Route::get('/jenispengaduan/get_jenis_pengaduan_by_id', [JenisPengaduanController::class, 'get_jenis_pengaduan_by_id']);
+Route::post('/jenispengaduan/store', [JenisPengaduanController::class, 'store']);
+Route::get('/jenispengaduan/edit', [JenisPengaduanController::class, 'edit']);
+Route::post('/jenispengaduan/update', [JenisPengaduanController::class, 'update']);
+Route::post('/jenispengaduan/delete', [JenisPengaduanController::class, 'delete']);

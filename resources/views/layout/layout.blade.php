@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Ewadul | @yield('judul_halaman')</title>
 
     <!-- Google Font: Source Sans Pro -->
@@ -169,11 +170,16 @@
             <!-- Sidebar -->
             <div class="sidebar">
 
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="info">
+                        <a href="#" class="d-block">{{Session::get('pengguna_nama')}}</a>
+                    </div>
+                </div>
+
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+                        <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
                         <li class="nav-item">
                             <a href="/dashboard" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -182,7 +188,8 @@
                                 </p>
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
+                        @if(Session::get('pengguna_level_id') == 1)
+                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-table"></i>
                                 <p>
@@ -198,7 +205,8 @@
                                     </a>
                                 </li>
                             </ul>
-                        </li> -->
+                        </li>
+                        @endif
                         <li class="nav-item">
                             <a href="/pengaduan" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>

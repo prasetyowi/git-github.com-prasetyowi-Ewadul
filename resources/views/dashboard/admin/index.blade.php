@@ -1,5 +1,5 @@
 <!-- Menghubungkan dengan view template master -->
-@extends('../layout/layout')
+@extends('../layout/layout_admin')
 
 <!-- isi bagian judul halaman -->
 <!-- cara penulisan isi section yang pendek -->
@@ -64,11 +64,11 @@
 
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="info-box mb-3">
-                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-shopping-cart"></i></span>
+                        <span class="info-box-icon bg-success elevation-1"><i class="fas fa-users"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Karyawan</span>
-                            <span class="info-box-number">760</span>
+                            <span class="info-box-number">{{ $data['karyawan'] }}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
@@ -138,6 +138,10 @@
                                                                                 echo 'btn-danger';
                                                                             } else if ($value->tr_ewadul_status == 'PENDING') {
                                                                                 echo 'btn-warning';
+                                                                            } else if ($value->tr_ewadul_status == 'DALAM PROSES') {
+                                                                                echo 'btn-warning';
+                                                                            } else if ($value->tr_ewadul_status == 'BUTUH PERSETUJUAN') {
+                                                                                echo 'btn-warning';
                                                                             } else if ($value->tr_ewadul_status == 'SELESAI') {
                                                                                 echo 'btn-success';
                                                                             }
@@ -172,12 +176,30 @@
                     </div>
                     <!-- /.info-box -->
                     <!-- Info Boxes Style 2 -->
-                    <div class="info-box mb-3 bg-warning">
+                    <div class="info-box mb-3" style="background-color: #FF4949;">
                         <span class="info-box-icon"><i class="fas fa-comment"></i></span>
 
                         <div class="info-box-content">
                             <span class="info-box-text">Pending</span>
                             <span class="info-box-number">{{ $data['pending'] }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <div class="info-box mb-3" style="background-color: #FF8D29;">
+                        <span class="info-box-icon"><i class="fas fa-comment"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Dalam Proses</span>
+                            <span class="info-box-number">{{ $data['dalam_proses'] }}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                    </div>
+                    <div class="info-box mb-3" style="background-color: #A7D129;">
+                        <span class="info-box-icon"><i class="fas fa-comment"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Butuh Persetujuan</span>
+                            <span class="info-box-number">{{ $data['butuh_persetujuan'] }}</span>
                         </div>
                         <!-- /.info-box-content -->
                     </div>
@@ -212,7 +234,6 @@
     <!-- /.content -->
 </div>
 @endsection
-
 @section('script_function')
 
 @endsection
