@@ -99,15 +99,54 @@
                             <!-- /.col -->
                             <div class="col-md-4">
                                 <div class="form-group">
+                                    <label>Provinsi</label>
+                                    <select class="form-control select2" id="TrEwadul-tr_ewadul_provinsi" name="TrEwadul[tr_ewadul_provinsi]" style="width: 100%;" onchange="get_kota_by_provinsi(this.value)">
+                                        <option value="">** Pilih **</option>
+                                        @foreach($data['Provinsi'] as $value)
+                                        <option value="{{ $value->kodepos_propinsi }}">{{ $value->kodepos_propinsi }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_provinsi"></div>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                            <div class=" col-md-4">
+                                <div class="form-group">
+                                    <label>Kota</label>
+                                    <select class="form-control select2" id="TrEwadul-tr_ewadul_kota" name="TrEwadul[tr_ewadul_kota]" style="width: 100%;" onchange="get_kecamatan_by_kota(this.value)">
+                                        <option value="">** Pilih **</option>
+                                        @foreach($data['Kota'] as $value)
+                                        <option value="{{ $value->kodepos_kota }}">{{ $value->kodepos_kota }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_kota"></div>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Kecamatan</label>
+                                    <select class="form-control select2" id="TrEwadul-tr_ewadul_kecamatan" name="TrEwadul[tr_ewadul_kecamatan]" style="width: 100%;" onchange="get_kelurahan_by_kota_kecamatan(this.value)">
+                                        <option value="">** Pilih **</option>
+                                        @foreach($data['Kecamatan'] as $value)
+                                        <option value="{{ $value->kodepos_kecamatan }}">{{ $value->kodepos_kecamatan }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_kecamatan"></div>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-4">
+                                <div class="form-group">
                                     <label>Kelurahan</label>
                                     <select class="form-control select2" id="TrEwadul-tr_ewadul_kelurahan" name="TrEwadul[tr_ewadul_kelurahan]" style="width: 100%;">
-                                        <option selected="selected">Alabama</option>
-                                        <option>Alaska</option>
-                                        <option>California</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
+                                        <option value="">** Pilih **</option>
+                                        @foreach($data['Keluarahan'] as $value)
+                                        <option value="{{ $value->kodepos_kelurahan }}">{{ $value->kodepos_kelurahan }}</option>
+                                        @endforeach
                                     </select>
                                     <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_kelurahan"></div>
                                 </div>
@@ -115,66 +154,12 @@
                             <!-- /.col -->
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Kecamatan</label>
-                                    <select class="form-control select2" id="TrEwadul-tr_ewadul_kecamatan" name="TrEwadul[tr_ewadul_kecamatan]" style="width: 100%;">
-                                        <option selected="selected">Alabama</option>
-                                        <option>Alaska</option>
-                                        <option>California</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
-                                    </select>
-                                    <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_kecamatan"></div>
-                                </div>
-                            </div>
-                            <!-- /.col -->
-                        </div>
-                        <!-- /.row -->
-                        <div class="row">
-                            <div class=" col-md-4">
-                                <div class="form-group">
-                                    <label>Kota</label>
-                                    <select class="form-control select2" id="TrEwadul-tr_ewadul_kota" name="TrEwadul[tr_ewadul_kota]" style="width: 100%;">
-                                        <option selected="selected">Alabama</option>
-                                        <option>Alaska</option>
-                                        <option>California</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
-                                    </select>
-                                    <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_kota"></div>
-                                </div>
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>Provinsi</label>
-                                    <select class="form-control select2" id="TrEwadul-tr_ewadul_provinsi" name="TrEwadul[tr_ewadul_provinsi]" style="width: 100%;">
-                                        <option selected="selected">Alabama</option>
-                                        <option>Alaska</option>
-                                        <option>California</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
-                                    </select>
-                                    <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_provinsi"></div>
-                                </div>
-                            </div>
-                            <!-- /.col -->
-                            <div class="col-md-4">
-                                <div class="form-group">
                                     <label>Kodepos</label>
                                     <select class="form-control select2" id="TrEwadul-tr_ewadul_kodepos" name="TrEwadul[tr_ewadul_kodepos]" style="width: 100%;">
-                                        <option selected="selected">Alabama</option>
-                                        <option>Alaska</option>
-                                        <option>California</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
+                                        <option value="">** Pilih **</option>
+                                        @foreach($data['Kodepos'] as $value)
+                                        <option value="{{ $value->kodepos_kodepos }}">{{ $value->kodepos_kodepos }}</option>
+                                        @endforeach
                                     </select>
                                     <div class="text-danger d-none" role="alert" id="alert-tr_ewadul_kodepos"></div>
                                 </div>

@@ -155,10 +155,10 @@
                             <td style="vertical-align:middle; text-align:center;">${v.tr_ewadul_tgl}</td>
                             <td style="vertical-align:middle; text-align:center;">${v.jenis_pengaduan_desc}</td>
                             <td style="vertical-align:middle; text-align:center;">
-                                <button class="btn btn-sm ${v.tr_ewadul_status == 'BARU' ? 'btn-primary' : v.tr_ewadul_status == 'BATAL' ? 'btn-danger': v.tr_ewadul_status == 'PENDING' ? 'btn-warning': v.tr_ewadul_status == 'SELESAI' ? 'btn-success' : '' }">${v.tr_ewadul_status}</button>
+                                <button class="btn btn-sm ${v.tr_ewadul_status == 'BARU' ? 'btn-primary' : v.tr_ewadul_status == 'BATAL' ? 'btn-danger': v.tr_ewadul_status == 'PENDING' ? 'btn-warning': v.tr_ewadul_status == 'SELESAI' ? 'btn-success' : v.tr_ewadul_status == 'DALAM PROSES' ? 'btn-warning' : v.tr_ewadul_status == 'BUTUH PERSETUJUAN' ? 'btn-warning' : '' }">${v.tr_ewadul_status}</button>
                             </td>
                             <td style="vertical-align:middle; text-align:center;">
-                                <a href="/pengaduan/edit/?id=${v.tr_ewadul_id}" class="btn btn-sm btn-info" target="_blank"><i class="fa fa-pen"></i></a>
+                                <a href="${v.tr_ewadul_status == 'SELESAI' || v.tr_ewadul_status == 'BATAL' ? '/pengaduan/detail/?id=' : '/pengaduan/edit/?id='}${v.tr_ewadul_id}" class="btn btn-sm btn-info" target="_blank"><i class="fa ${v.tr_ewadul_status == 'SELESAI' || v.tr_ewadul_status == 'BATAL' ? 'fa fa-search' : 'fa fa-pen'}"></i></a>
                             </td>
                         </tr>
                     `)

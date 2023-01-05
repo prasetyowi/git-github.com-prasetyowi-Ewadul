@@ -23,6 +23,7 @@
             </div>
         </div><!-- /.container-fluid -->
     </section>
+    <?php echo var_dump($data['notifikasi']); ?>
 
     <!-- Main content -->
     <section class="content">

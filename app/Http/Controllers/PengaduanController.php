@@ -13,7 +13,9 @@ class PengaduanController extends Controller
     public function index()
     {
         if (Session::get('login') == TRUE) {
-            return view('pengaduan/index');
+            $data['notifikasi'] = app('App\Http\Controllers\NotifikasiController')->get_notifikasi();
+
+            return view('pengaduan/index', compact('data'));
         } else {
             return redirect()->to('/auth/login');
         }
@@ -38,9 +40,21 @@ class PengaduanController extends Controller
         }
 
         $data['jenis'] = DB::table('jenis_pengaduan')->where('is_aktif', 1)->get();
-        $data['status'] = DB::table('tr_ewadul_status')->get();
         $data['kota'] = "Surabaya";
         $data['tr_ewadul_id'] = $tr_ewadul_id;
+        $data['notifikasi'] = app('App\Http\Controllers\NotifikasiController')->get_notifikasi();
+
+        $data['Provinsi'] = DB::table('wilayah_kodepos')->select('kodepos_propinsi')->groupByRaw('kodepos_propinsi')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+        $data['Kota'] = DB::table('wilayah_kodepos')->select('kodepos_kota')->groupByRaw('kodepos_kota')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+        $data['Kecamatan'] = DB::table('wilayah_kodepos')->select('kodepos_kecamatan')->groupByRaw('kodepos_kecamatan')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+        $data['Kelurahan'] = DB::table('wilayah_kodepos')->select('kodepos_kelurahan')->groupByRaw('kodepos_kelurahan')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+        $data['Kodepos'] = DB::table('wilayah_kodepos')->select('kodepos')->groupByRaw('kodepos')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+
+        if (Session::get('pengguna_level_id') == "1") {
+            $data['status'] = DB::table('tr_ewadul_status')->get();
+        } else {
+            $data['status'] = DB::table('tr_ewadul_status')->whereNotIn('tr_ewadul_status', array("BATAL", "SELESAI"))->get();
+        }
 
         if (Session::get('login') == TRUE) {
             return view('pengaduan/form', compact('data'));
@@ -53,7 +67,19 @@ class PengaduanController extends Controller
     {
         $data['header'] = DB::table('tr_ewadul')->where('tr_ewadul_id', $request->id)->get()[0];
         $data['jenis'] = DB::table('jenis_pengaduan')->where('is_aktif', 1)->get();
-        $data['status'] = DB::table('tr_ewadul_status')->get();
+        $data['notifikasi'] = app('App\Http\Controllers\NotifikasiController')->get_notifikasi();
+
+        $data['Provinsi'] = DB::table('wilayah_kodepos')->select('kodepos_propinsi')->groupByRaw('kodepos_propinsi')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+        $data['Kota'] = DB::table('wilayah_kodepos')->select('kodepos_kota')->groupByRaw('kodepos_kota')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+        $data['Kecamatan'] = DB::table('wilayah_kodepos')->select('kodepos_kecamatan')->groupByRaw('kodepos_kecamatan')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+        $data['Kelurahan'] = DB::table('wilayah_kodepos')->select('kodepos_kelurahan')->groupByRaw('kodepos_kelurahan')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+        $data['Kodepos'] = DB::table('wilayah_kodepos')->select('kodepos')->groupByRaw('kodepos')->where('kodepos_propinsi', "JAWA TIMUR")->get();
+
+        if (Session::get('pengguna_level_id') == "1") {
+            $data['status'] = DB::table('tr_ewadul_status')->get();
+        } else {
+            $data['status'] = DB::table('tr_ewadul_status')->whereNotIn('tr_ewadul_status', array("BATAL", "SELESAI"))->get();
+        }
 
         if (Session::get('pengguna_level_id') == "1") {
             return view('pengaduan/karyawan/edit', compact('data'));
@@ -68,34 +94,32 @@ class PengaduanController extends Controller
     {
         $data['header'] = DB::table('tr_ewadul')->where('tr_ewadul_id', $request->id)->get()[0];
         $data['jenis'] = DB::table('jenis_pengaduan')->where('is_aktif', 1)->get();
+        $data['notifikasi'] = app('App\Http\Controllers\NotifikasiController')->get_notifikasi();
 
         return view('pengaduan/detail', compact('data'));
     }
 
+    public function get_kota_by_provinsi($provinsi)
+    {
+        $data = DB::table('wilayah_kodepos')->where('kodepos_provinsi', $provinsi)->get();
+        return $data;
+    }
+
     public function get_kecamatan_by_kota($kota)
     {
-        //get all posts from Models
-        $data = "Tandes";
-
-        //return view with data
+        $data = DB::table('wilayah_kodepos')->where('kodepos_kota', $kota)->get();
         return $data;
     }
 
     public function get_kelurahan_by_kota_kecamatan($kota, $kecamatan)
     {
-        //get all posts from Models
-        $data = "Manukan";
-
-        //return view with data
+        $data = DB::table('wilayah_kodepos')->where('kodepos_kota', $kota)->where('kodepos_kecamatan', $kecamatan)->get();
         return $data;
     }
 
     public function get_kodepos_by_kota_kecamatan_kelurahan($kota, $kecamatan, $kelurahan)
     {
-        //get all posts from Models
-        $data = "60185";
-
-        //return view with data
+        $data = DB::table('wilayah_kodepos')->where('kodepos_kota', $kota)->where('kodepos_kecamatan', $kecamatan)->where('kodepos_kelurahan', $kelurahan)->get();
         return $data;
     }
 
@@ -253,6 +277,14 @@ class PengaduanController extends Controller
             'pengguna_id' => Session::get('pengguna_id')
         ]);
 
+        $post = DB::table('notifikasi_pengaduan')->insert([
+            'tr_ewadul_id' => $request->TrEwadul['tr_ewadul_id'],
+            'tgl_buat' => date('Y-m-d H:i:s'),
+            'tgl_update' => date('Y-m-d H:i:s'),
+            'pengguna_id' => Session::get('pengguna_id'),
+            'is_lihat' => 0
+        ]);
+
         return response()->json([
             'success' => true,
             'message' => 'Pengaduan Berhasil Dibuat!',
@@ -315,8 +347,7 @@ class PengaduanController extends Controller
                 'tr_ewadul_tgl' => $request->TrEwadul['tr_ewadul_tgl'],
                 'tr_ewadul_status' => $request->TrEwadul['tr_ewadul_status'],
                 'tr_ewadul_attechment' => $request->TrEwadul['tr_ewadul_attechment_edit'],
-                'tgl_updated' => date('Y-m-d H:i:s'),
-                'pengguna_id' => Session::get('pengguna_id')
+                'tgl_updated' => date('Y-m-d H:i:s')
             ]);
         } else {
 
@@ -337,24 +368,44 @@ class PengaduanController extends Controller
                 'tr_ewadul_tgl' => $request->TrEwadul['tr_ewadul_tgl'],
                 'tr_ewadul_status' => $request->TrEwadul['tr_ewadul_status'],
                 'tr_ewadul_attechment' => $new_name,
-                'tgl_updated' => date('Y-m-d H:i:s'),
-                'pengguna_id' => Session::get('pengguna_id')
+                'tgl_updated' => date('Y-m-d H:i:s')
             ]);
         }
 
-        if ($request->TrEwadul['tr_ewadul_status'] == "DALAM PROSES" || $request->TrEwadul['tr_ewadul_status'] == "BUTUH PERSETUJUAN") {
+        $post = DB::table('notifikasi_pengaduan')->insert([
+            'tr_ewadul_id' => $request->TrEwadul['tr_ewadul_id'],
+            'tgl_buat' => date('Y-m-d H:i:s'),
+            'tgl_update' => date('Y-m-d H:i:s'),
+            'pengguna_id' => Session::get('pengguna_id'),
+            'is_lihat' => 0
+        ]);
+
+        if (($request->TrEwadul['tr_ewadul_status'] == "DALAM PROSES" || $request->TrEwadul['tr_ewadul_status'] == "BUTUH PERSETUJUAN") && (Session::get('pengguna_level_id') == "1" || Session::get('pengguna_level_id') == "2")) {
             $post = DB::table('tr_ewadul_proses')->insert([
                 'tr_ewadul_id' => $request->TrEwadul['tr_ewadul_id'],
                 'tgl_proses_pengaduan' => date('Y-m-d H:i:s'),
                 'pengguna_id' => Session::get('pengguna_id')
             ]);
-        } else if ($request->TrEwadul['tr_ewadul_status'] == "SELESAI" || $request->TrEwadul['tr_ewadul_status'] == "BATAL") {
+        } else if (($request->TrEwadul['tr_ewadul_status'] == "SELESAI" || $request->TrEwadul['tr_ewadul_status'] == "BATAL") && Session::get('pengguna_level_id') == "1") {
             $post = DB::table('tr_ewadul_approval')->insert([
                 'tr_ewadul_id' => $request->TrEwadul['tr_ewadul_id'],
                 'tgl_approval_pengaduan' => date('Y-m-d H:i:s'),
                 'pengguna_id' => Session::get('pengguna_id')
             ]);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pengaduan Berhasil Diubah!',
+            'data'    => $post
+        ]);
+    }
+
+    public function update_pengaduan_kemarin(Request $request)
+    {
+        $post = DB::table('tr_ewadul')->where('tr_ewadul_status', "BARU")->where('tr_ewadul_tgl', '<', date('Y-m-d'))->update([
+            'tr_ewadul_status' => "PENDING"
+        ]);
 
         return response()->json([
             'success' => true,

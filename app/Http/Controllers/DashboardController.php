@@ -12,12 +12,12 @@ class DashboardController extends Controller
     {
         if (Session::get('login') == TRUE) {
             $data['jenis_pengaduan'] = DB::table('jenis_pengaduan')->count();
-            $data['pengaduan'] = DB::table('tr_ewadul')->count();
             $data['pengguna'] = DB::table('pengguna')->where('pengguna_level_id', "3")->count();
             $data['karyawan'] = DB::table('pengguna')->where('pengguna_level_id', "2")->count();
+            $data['notifikasi'] = app('App\Http\Controllers\NotifikasiController')->get_notifikasi();
 
             if (Session::get('pengguna_level_id') == "1") {
-
+                $data['pengaduan'] = DB::table('tr_ewadul')->count();
                 $data['baru'] = DB::table('tr_ewadul')->where('tr_ewadul_status', "BARU")->count();
                 $data['batal'] = DB::table('tr_ewadul')->where('tr_ewadul_status', "BATAL")->count();
                 $data['pending'] = DB::table('tr_ewadul')->where('tr_ewadul_status', "PENDING")->count();
@@ -41,7 +41,7 @@ class DashboardController extends Controller
 
                 return view('dashboard/admin/index', compact('data'));
             } else if (Session::get('pengguna_level_id') == "2") {
-
+                $data['pengaduan'] = DB::table('tr_ewadul')->count();
                 $data['baru'] = DB::table('tr_ewadul')->where('tr_ewadul_status', "BARU")->count();
                 $data['batal'] = DB::table('tr_ewadul')->where('tr_ewadul_status', "BATAL")->count();
                 $data['pending'] = DB::table('tr_ewadul')->where('tr_ewadul_status', "PENDING")->count();
@@ -66,6 +66,7 @@ class DashboardController extends Controller
                 return view('dashboard/karyawan/index', compact('data'));
             } else if (Session::get('pengguna_level_id') == "3") {
 
+                $data['pengaduan'] = DB::table('tr_ewadul')->where('pengguna_id', Session::get('pengguna_id'))->count();
                 $data['baru'] = DB::table('tr_ewadul')->where('tr_ewadul_status', "BARU")->where('pengguna_id', Session::get('pengguna_id'))->count();
                 $data['batal'] = DB::table('tr_ewadul')->where('tr_ewadul_status', "BATAL")->where('pengguna_id', Session::get('pengguna_id'))->count();
                 $data['pending'] = DB::table('tr_ewadul')->where('tr_ewadul_status', "PENDING")->where('pengguna_id', Session::get('pengguna_id'))->count();

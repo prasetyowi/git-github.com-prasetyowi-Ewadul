@@ -5,6 +5,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengaduanController;
 use App\Http\Controllers\JenisPengaduanController;
+use App\Http\Controllers\NotifikasiController;
+use App\Http\Controllers\KaryawanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +40,10 @@ Route::get('/pengaduan/get_pengaduan_today', [PengaduanController::class, 'get_p
 Route::get('/pengaduan/form', [PengaduanController::class, 'form']);
 Route::post('/pengaduan/store', [PengaduanController::class, 'store']);
 Route::post('/pengaduan/update', [PengaduanController::class, 'update']);
+Route::post('/pengaduan/update_pengaduan_kemarin', [PengaduanController::class, 'update_pengaduan_kemarin']);
+Route::post('/pengaduan/get_kecamatan_by_kota', [PengaduanController::class, 'get_kecamatan_by_kota']);
+Route::post('/pengaduan/get_kelurahan_by_kota_kecamatan', [PengaduanController::class, 'get_kelurahan_by_kota_kecamatan']);
+Route::post('/pengaduan/get_kodepos_by_kota_kecamatan_kelurahan', [PengaduanController::class, 'get_kodepos_by_kota_kecamatan_kelurahan']);
 
 Route::get('/jenispengaduan', [JenisPengaduanController::class, 'index']);
 Route::get('/jenispengaduan/get_jenis_pengaduan', [JenisPengaduanController::class, 'get_jenis_pengaduan']);
@@ -46,3 +52,12 @@ Route::post('/jenispengaduan/store', [JenisPengaduanController::class, 'store'])
 Route::get('/jenispengaduan/edit', [JenisPengaduanController::class, 'edit']);
 Route::post('/jenispengaduan/update', [JenisPengaduanController::class, 'update']);
 Route::post('/jenispengaduan/delete', [JenisPengaduanController::class, 'delete']);
+
+Route::post('/notifikasi/update_lihat_notifikasi', [NotifikasiController::class, 'update_lihat_notifikasi']);
+
+Route::get('/karyawan', [KaryawanController::class, 'index']);
+Route::get('/karyawan/get_pengguna', [KaryawanController::class, 'get_pengguna']);
+Route::get('/karyawan/get_pengguna_by_id', [KaryawanController::class, 'get_pengguna_by_id']);
+Route::post('/karyawan/store', [KaryawanController::class, 'store']);
+Route::get('/karyawan/edit', [KaryawanController::class, 'edit']);
+Route::post('/karyawan/update', [KaryawanController::class, 'update']);

@@ -80,58 +80,26 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
-                        <span class="badge badge-danger navbar-badge">3</span>
+                        <span class="badge badge-danger navbar-badge">{{ count($data['notifikasi'])}}</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="#" class="dropdown-item">
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right text-info">
+                        @foreach($data['notifikasi'] as $value)
+                        <a href="{{ $value->tr_ewadul_status == 'BATAL' || $value->tr_ewadul_status == 'SELESAI' ? '/pengaduan/detail/?id=' : '/pengaduan/edit/?id=' }}{{ $value->tr_ewadul_id }}" class="dropdown-item" onclick="LihatNotifikasi('{{ $value->notifikasi_id }}')">
                             <!-- Message Start -->
                             <div class="media">
-                                <img src="../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
-                                        Brad Diesel
-                                        <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                                        Pengaduan
+                                        <span class="float-right text-sm"><i class="fas fa-comment"></i></span>
                                     </h3>
-                                    <p class="text-sm">Call me whenever you can...</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                                    <p class="text-sm">{{ $value->tr_ewadul_id }} - {{ $value->tr_ewadul_status }}</p>
+                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> {{ round($value->hour_ago) }} Hours Ago</p>
                                 </div>
                             </div>
                             <!-- Message End -->
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="../dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        John Pierce
-                                        <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">I got your message bro</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="../dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        Nora Silvester
-                                        <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">The subject goes here</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">Lihat Semua Pemberitahuan</a>
+                        @endforeach
                     </div>
                 </li>
                 <li class="nav-item">
@@ -201,6 +169,12 @@
                                     <a href="/jenispengaduan" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Jenis Pengaduan</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/karyawan" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Karyawan</p>
                                     </a>
                                 </li>
                             </ul>
@@ -365,6 +339,18 @@
                 $(this).bootstrapSwitch('state', $(this).prop('checked'));
             })
 
+            $.ajax({
+                url: "/pengaduan/update_pengaduan_kemarin",
+                method: "POST",
+                data: {
+                    "_token": $("meta[name='csrf-token']").attr("content")
+                },
+                dataType: 'JSON',
+                success: function(response) {
+
+                }
+            })
+
         })
         // BS-Stepper Init
         document.addEventListener('DOMContentLoaded', function() {
@@ -425,6 +411,21 @@
             myDropzone.removeAllFiles(true)
         }
         // DropzoneJS Demo Code End
+
+        function LihatNotifikasi(id) {
+            $.ajax({
+                url: "/notifikasi/update_lihat_notifikasi",
+                method: "POST",
+                data: {
+                    id: id,
+                    "_token": $("meta[name='csrf-token']").attr("content")
+                },
+                dataType: 'JSON',
+                success: function(response) {
+
+                }
+            })
+        }
     </script>
 
     @yield('script_function')

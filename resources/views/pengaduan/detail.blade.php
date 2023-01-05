@@ -184,8 +184,9 @@
                         <!-- /.row -->
                         <div class="row">
                             <div class=" col-md-12">
-                                <label>Upload Bukti</label><br><br>
-                                <img src="{{ asset('assets/upload/images/pengaduan/'.$data['header']->tr_ewadul_attechment) }}" style="width:350px;">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-bukti"><i class="fa fa-search"></i>
+                                    Bukti Pengaduan
+                                </button>
                                 <!-- <div id="TrEwadul-tr_ewadul_attechment" name="TrEwadul[tr_ewadul_attechment]" class=" row">
                                     <div class="col-lg-6">
                                         <div class="btn-group w-100">
@@ -266,6 +267,22 @@
     </section>
     <!-- /.content -->
 </div>
+
+<div class="modal fade" id="modal-bukti">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="{{ asset('assets/upload/images/pengaduan/'.$data['header']->tr_ewadul_attechment) }}" style="width: 1000px;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger pull-right" data-dismiss="modal"><i class="fa fa-times"></i>Tutup</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 @endsection
 
 @section('script_function')

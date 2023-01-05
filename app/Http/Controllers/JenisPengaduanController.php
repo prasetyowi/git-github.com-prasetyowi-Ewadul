@@ -13,7 +13,9 @@ class JenisPengaduanController extends Controller
     public function index()
     {
         if (Session::get('login') == TRUE) {
-            return view('master/jenis_pengaduan/index');
+            $data['notifikasi'] = app('App\Http\Controllers\NotifikasiController')->get_notifikasi();
+
+            return view('master/jenis_pengaduan/index', compact($data));
         } else {
             return redirect()->to('/auth/login');
         }
